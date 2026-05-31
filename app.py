@@ -57,13 +57,12 @@ if uploaded_file is not None:
         prediction = model.predict(img, verbose=0)
 
         confidence = float(prediction[0][0])
-
-        if confidence >= 0.5:
-            result = "🩺 PCOS Detected"
-            confidence_score = confidence * 100
-        else:
-            result = "✅ Normal"
-            confidence_score = (1 - confidence) * 100
+if confidence < 0.5:
+    result = "🩺 PCOS Detected"
+    confidence_score = (1 - confidence) * 100
+else:
+    result = "✅ Normal"
+    confidence_score = confidence * 100
 
         st.markdown("---")
 
