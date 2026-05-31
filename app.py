@@ -20,6 +20,7 @@ def load_model():
 
     if not os.path.exists(model_path):
         response = requests.get(MODEL_URL)
+
         with open(model_path, "wb") as f:
             f.write(response.content)
 
@@ -50,22 +51,27 @@ if uploaded_file is not None:
     img = np.array(img, dtype=np.float32)
 
     img = img / 255.0
-
     img = np.expand_dims(img, axis=0)
 
     try:
         prediction = model.predict(img, verbose=0)
 
         confidence = float(prediction[0][0])
-if confidence < 0.5:
-    result = "🩺 PCOS Detected"
-    confidence_score = (1 - confidence) * 100
-else:
-    result = "✅ Normal"
-    confidence_score = confidence * 100
+
+        # TEMPORARY DEBUG
+        st.write("Raw Prediction:", confidence)
+
+        # infected = PCOS (class 0)
+        # noninfected = Normal (class 1)
+
+        if confidence < 0.5:
+            result = "🩺 PCOS Detected"
+            confidence_score = (1 - confidence) * 100
+        else:
+            result = "✅ Normal"
+            confidence_score = confidence * 100
 
         st.markdown("---")
-
         st.subheader(result)
 
         st.metric(
